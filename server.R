@@ -7,7 +7,6 @@
 #
 library(shiny)
 library(xcms)
-library(animation)
 
 #' Get the report for biological replicates.
 #' @param xset the xcmsset object which for all of your technique replicates for bio replicated sample in single group
