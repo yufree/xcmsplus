@@ -7,6 +7,7 @@
 #
 library(shiny)
 library(xcms)
+library(animation)
 
 #' Get the report for biological replicates.
 #' @param xset the xcmsset object which for all of your technique replicates for bio replicated sample in single group
@@ -310,17 +311,37 @@ LoadToEnvironment <- function(RData, env = new.env()) {
         return(env)
 }
 
+csvmr <- function(data){
+        n <- dim(data)[2] - 2
+        col <- grDevices::rainbow(n,alpha = 0.318)
+        
+        graphics::plot(
+                data$mz ~ data$time,
+                xlab = "Retention Time(s)",
+                ylab = "m/z",
+                ylim = c(100,1000),
+                type = 'n',
+                pch = 19
+        )
+        data2 <- data[,-c(1,2)]
+        name <- colnames(data2)
+        for (i in 1:n) {
+                value <- as.numeric(t(data2)[i,])
+                graphics::points(y = data$mz,
+                                 x = data$time,
+                                 cex = log10(value+1) - 4,
+                                 col = col[i],
+                                 pch = 19
+                )
+        }
+        legend('top', legend = name, col = col, pch = 19, horiz = T, bty = 'n')
+}
+
 shinyServer(function(input, output, session) {
         dataInput <- reactive({
                 sessionEnvir <- sys.frame()
                 if (!is.null(input$file))
                         load(input$file$datapath, sessionEnvir)
-        })
-        
-        dataInput2 <- reactive({
-                if (!is.null(input$file2)) {
-                        read.csv(input$file2)
-                }
         })
         
         output$plot1 <- renderPlot({
@@ -353,6 +374,14 @@ shinyServer(function(input, output, session) {
                         return()
                 else
                         plotpca(xset)
+        })
+        
+        output$plot5 <- renderPlot({
+                if (is.null(input$file2$datapath))
+                        return()
+                else
+                        data <- read.csv(input$file2$datapath)
+                        csvmr(data)
         })
         
 })

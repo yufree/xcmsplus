@@ -20,11 +20,11 @@ shinyUI(fluidPage(
                         fileInput('file',
                                   label = 'R Dataset with xcmsSet object in it',
                                   accept = c('.RData')),
-                        # h4('Uploading csv Files'),
-                        # fileInput('file2',
-                        #           label = 'R Dataset in csv format',
-                        #           accept = c('.csv')),
-                        # 
+                        h4('Uploading csv Files'),
+                        fileInput('file2',
+                                  label = 'R Dataset in csv format',
+                                  accept = c('.csv')),
+                        
                         sliderInput(
                                 "rsd",
                                 "RSD(%)",
@@ -57,8 +57,17 @@ shinyUI(fluidPage(
                                              ),
                                              br(),
                                              p("Then just upload your 'xset.RData' to this app."),
-                                             br(),
                                              p("You could download demo data", a("here",href = "https://github.com/yufree/xcmsplus/blob/master/test.RData?raw=true")),
+                                             p("Or you could upload csv file from the following code in R to get the plot. The first column should be mz and the second column should be time. The following column could be the mean intensity in multiple groups. The code is"),
+                                             br(),
+                                             code("library(xcms)",br(),
+                                                  "library(enviGCMS)",br(),
+                                                  "path <- './data'",br(),
+                                                  "xset <- getdata(path)",br(),
+                                                  "gettechrep(xset,file = 'test')",br()
+                                             ),
+                                             p("You could find the csv file in your working folder and you could also download a demo cse file", a("here",href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true")),
+                                             br(),
                                              "Contact me by click",
                                              a("here", href = "mailto:yufreecas@gmail.com"),
                                              'or just add an issue on',
@@ -70,7 +79,9 @@ shinyUI(fluidPage(
                         tabPanel("RSD",
                         plotOutput("plot3")),
                         tabPanel("PCA",
-                        plotOutput("plot4"))
+                        plotOutput("plot4")),
+                        tabPanel("csv",
+                        plotOutput("plot5"))
                 )
         ))
 ))
