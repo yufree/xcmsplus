@@ -3,6 +3,8 @@ title: xcmsplus
 account: yufree
 server: bookdown.org
 appId: 727
-bundleId: 3248
+bundleId: 3250
 url: https://bookdown.org/yufree/xcmsplus/
-when: 1501693134.82419
+when: 1501693658.84204
+asMultiple: FALSE
+asStatic: FALSE
