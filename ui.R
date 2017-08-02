@@ -58,7 +58,7 @@ shinyUI(fluidPage(
                                              br(),
                                              p("Then just upload your 'xset.RData' to this app."),
                                              br(),
-                                             p("You could download demo data", a("here",href = "")),
+                                             p("You could download demo data", a("here",href = "https://github.com/yufree/xcmsplus/blob/master/test.RData?raw=true")),
                                              "Contact me by click",
                                              a("here", href = "mailto:yufreecas@gmail.com"),
                                              'or just add an issue on',
