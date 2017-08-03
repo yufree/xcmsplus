@@ -24,7 +24,7 @@ shinyUI(fluidPage(
                                   accept = c('.RData')),
                         h4('Uploading csv Files'),
                         fileInput('file2',
-                                  label = 'csv format',
+                                  label = 'csv Files',
                                   accept = c('.csv')),
                         
                         sliderInput(
@@ -36,11 +36,15 @@ shinyUI(fluidPage(
                         ),
                         sliderInput(
                                 "ins",
-                                "Intensity",
+                                "Intensity in Log scale",
                                 min = 1,
                                 max = 10,
                                 value = 5
                         ),
+                        sliderInput("mz", "mass Range",
+                                    min = 50, max = 1000, value = c(200,800)),
+                        sliderInput("rt", "RT Range",
+                                    min = 0, max = 5000, value = c(3000,4000)),
                         "This app is created by ",
                         a("Miao Yu", href = "mailto:yufreecas@gmail.com")
                         
@@ -65,7 +69,6 @@ shinyUI(fluidPage(
                                                 a("R", href = "https://www.r-project.org/"),
                                                 " and upload the xcmsSet object or csv file to this app. The following code would help:"
                                         ),
-                                        br(),
                                         code(
                                                 "BiocInstaller::biocLite('xcms')",
                                                 br(),
@@ -89,28 +92,20 @@ shinyUI(fluidPage(
                                                 a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.RData?raw=true")
                                         ),
                                         p(
-                                                "Or you could upload csv file from the following code in R to get the plot. The first column should be mz and the second column should be time. The following columns could be the mean intensity in multiple groups. You could either export data from xcms online, mzMine or directly get from R script. The code is"
+                                                "Or you could upload csv file from the following code in R to get the plot. The first column should be m/z and the second column should be time in seconds. The following columns could be the mean intensities in multiple groups. You could either export data from xcms online, mzMine or directly get from R script. The code is"
                                         ),
-                                        br(),
                                         code(
-                                                "library(xcms)",
-                                                br(),
-                                                "library(enviGCMS)",
-                                                br(),
-                                                "path <- './data'",
-                                                br(),
-                                                "xset <- getdata(path)",
-                                                br(),
-                                                "gettechrep(xset,file = 'test')",
+                                                "getbiorep(xset,file = 'test')",
                                                 br()
                                         ),
+                                        br(),
                                         p(
-                                                "You could find the csv file to be uploaded in your working folder and you could also download a demo cse file",
-                                                a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true")
+                                                "You could find the csv file to be uploaded in your working folder and you could also download and upload a demo csv file",
+                                                a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true"), ". The RSD% filter is working in this mode."
                                         ),
                                         br(),
                                         p(
-                                                "After uploading, you could see the result by hitting different tabs"
+                                                "After uploading, you could see the result by hitting different tabs above. Also you could change the RSD%, intensity(in Log scale) and ranges of mass and retention time by the side slides to explore your data."
                                         ),
                                         "Contact me by click",
                                         a("here", href = "mailto:yufreecas@gmail.com"),
@@ -118,15 +113,16 @@ shinyUI(fluidPage(
                                         a("Github", href = "https://github.com/yufree/xcmsplus"),
                                         "if you have questions."
                                 ),
+                                tabPanel("csv",
+                                         plotOutput("plot5")),
                                 tabPanel("Peaks",
-                                         plotOutput("plot1"),
+                                         plotOutput("plot1")),
+                                tabPanel("Background subtraction",
                                          plotOutput("plot2")),
                                 tabPanel("RSD",
                                          plotOutput("plot3")),
                                 tabPanel("PCA",
                                          plotOutput("plot4")),
-                                tabPanel("csv",
-                                         plotOutput("plot5")),
                                 tabPanel(
                                         "References",
                                         p(
