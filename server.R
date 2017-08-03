@@ -63,6 +63,28 @@ csvmr <- function(data,inscf,...) {
         )
 }
 
+csvpca <- function(data,
+                    center = T,
+                    scale = T) {
+        
+                pch = colnames(data[,-c(1,2)])
+                
+        pcao <- stats::prcomp(t(data), center = center,
+                              scale = scale)
+        pcaoVars = signif(((pcao$sdev) ^ 2) / (sum((pcao$sdev) ^ 2)),
+                          3) * 100
+        graphics::plot(
+                pcao$x[, 1],
+                pcao$x[, 2],
+                xlab = paste("PC1:",
+                             pcaoVars[1], "% of Variance Explained"),
+                ylab = paste("PC2:",
+                             pcaoVars[2], "% of Variance Explained"),
+                pch = pch,
+                cex = 2
+        )
+}
+
 shinyServer(function(input, output, session) {
         dataInput <- reactive({
                 sessionEnvir <- sys.frame()
@@ -104,8 +126,12 @@ shinyServer(function(input, output, session) {
         })
         
         output$plot4 <- renderPlot({
-                if (is.null(dataInput()))
+                if (is.null(dataInput())&is.null(input$file2$datapath))
                         return()
+                else if (!is.null(input$file2$datapath)){
+                        data <- read.csv(input$file2$datapath)
+                        csvpca(data)
+                }
                 else
                         plotpca(xset)
         })
