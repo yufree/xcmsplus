@@ -44,6 +44,7 @@ shinyUI(fluidPage(
                 mainPanel(
                         tabsetPanel(
                                 type = "tabs",
+                                id = 'dataset',
                                 tabPanel(
                                         'Description',
                                         h5(
