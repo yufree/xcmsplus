@@ -91,7 +91,18 @@ shinyServer(function(input, output, session) {
                 if (!is.null(input$file))
                         load(input$file$datapath, sessionEnvir)
         })
-        
+        output$datacsv <- renderDataTable({
+                if (is.null(input$file2$datapath))
+                        return()
+                else
+                        read.csv(input$file2$datapath)
+                })
+        output$dataxset <- renderDataTable({
+                if (is.null(dataInput()))
+                        return()
+                else
+                        getbiorep(xset)
+        })
         output$plot1 <- renderPlot({
                 if (is.null(dataInput()))
                         return()

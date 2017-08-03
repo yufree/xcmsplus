@@ -105,6 +105,10 @@ shinyUI(fluidPage(
                                 ),
                                 tabPanel("csv",
                                          plotOutput("plot5")),
+                                tabPanel("Peaklist",
+                                         dataTableOutput('datacsv'),
+                                         dataTableOutput('dataxset')
+                                         ),
                                 tabPanel("Peaks",
                                          plotOutput("plot1")),
                                 tabPanel("Background subtraction",
