@@ -1,19 +1,9 @@
-
-
-
-
-# This is the user-interface definition of a Shiny web application.
-# You can find out more about building applications with Shiny here:
-#
-# http://shiny.rstudio.com
-#
-
 library(shiny)
 
 shinyUI(fluidPage(
         tags$head(includeScript("ga.js")),
         # Application title
-        titlePanel("Visualization based on xcms"),
+        titlePanel("Data Visualization of GC/LC-MS profile based on xcms and enviGCMS packages"),
         
         # Sidebar with a slider input for rsd and ins
         sidebarLayout(
