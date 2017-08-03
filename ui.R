@@ -10,6 +10,7 @@
 library(shiny)
 
 shinyUI(fluidPage(
+        tags$head(includeScript("ga.js")),
         # Application title
         titlePanel("Visualization based on xcms"),
         
