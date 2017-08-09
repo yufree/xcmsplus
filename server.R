@@ -217,7 +217,10 @@ shinyServer(function(input, output, session) {
         })
         
         output$brush_info <- renderDataTable({
-                data <- getbiorep(xset, rsdcf = input$rsd, inscf = input$ins)
+                if (is.null(dataInput()))
+                        return()
+                else
+                        data <- getbiorep(xset, rsdcf = input$rsd, inscf = input$ins)
                 brushedPoints(data, input$plotmrs_brush, "rtmed","mzmed")
         })
         

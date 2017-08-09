@@ -16,7 +16,7 @@ shinyUI(fluidPage(
                         fileInput('file2',
                                   label = 'csv Files',
                                   accept = c('.csv')),
-                        
+                        h4('Data filter'),
                         sliderInput(
                                 "rsd",
                                 "RSD(%)",
