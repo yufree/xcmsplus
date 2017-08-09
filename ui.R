@@ -108,16 +108,16 @@ shinyUI(fluidPage(
                                          h3(
                                                  "Interactive scale visulization for m/z-rt profile"
                                          ),
-                                         p("You could brush an area to see the enlarged results in bottom plot and the points list in the table."),
-                                         plotOutput("plotmr",click = "plot_click",hover = "plot_hover",
+                                         p("You could brush an area in the left plot to see the enlarged results in right plot and the points listed in the table below the plots."),
+                                         column(6,plotOutput("plotmr",click = "plot_click",hover = "plot_hover",
                                                     brush = brushOpts(
                                                             id = "plotmrs_brush",
                                                             resetOnNew = TRUE
                                                     )
                                          ),
-                                         verbatimTextOutput("info"),
-                                         plotOutput('plotmrs',click = "plot_click2",hover = "plot_hover2"),
-                                         verbatimTextOutput("info2"),
+                                         verbatimTextOutput("info")),
+                                         column(6,plotOutput('plotmrs',click = "plot_click2",hover = "plot_hover2"),
+                                         verbatimTextOutput("info2")),
                                          h4("Brushed points"),
                                          dataTableOutput("brush_info")
                                          ),
@@ -125,16 +125,16 @@ shinyUI(fluidPage(
                                          h3(
                                                  "Interactive scale visulization for m/z-rt profile"
                                          ),
-                                         p("You could brush an area to see the enlarged results in bottom plot and the points list in the table."),
-                                         plotOutput("plotcsv",click = "plotcsv_click",hover = "plotcsv_hover",
+                                         p("You could brush an area in the left plot to see the enlarged results in right plot and the points listed in the table below the plots."),
+                                         column(6,plotOutput("plotcsv",click = "plotcsv_click",hover = "plotcsv_hover",
                                                     brush = brushOpts(
                                                             id = "plotcsvs_brush",
                                                             resetOnNew = TRUE
                                                     )
                                          ),
-                                         verbatimTextOutput("infocsv"),
-                                         plotOutput('plotcsvs',click = "plotcsv_click2",hover = "plotcsv_hover2"),
-                                         verbatimTextOutput("info2csv"),
+                                         verbatimTextOutput("infocsv")),
+                                         column(6,plotOutput('plotcsvs',click = "plotcsv_click2",hover = "plotcsv_hover2"),
+                                         verbatimTextOutput("info2csv")),
                                          h4("Brushed points"),
                                          dataTableOutput("brush_info_csv")
                                 ),
