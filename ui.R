@@ -146,7 +146,7 @@ shinyUI(fluidPage(
                                 tabPanel("PCA",
                                          plotOutput("plotpca")),
                                 tabPanel("Batch Correction",
-                                         h3("Surrogate Variable analysis(sva) correction")
+                                         h3("Surrogate Variable analysis(sva) correction"),
                                          plotOutput("datacorp"),
                                          plotOutput("datacorpca")),
                                 
