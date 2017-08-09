@@ -122,6 +122,10 @@ shinyUI(fluidPage(
                                          dataTableOutput("brush_info")
                                          ),
                                 tabPanel("csv m/z-rt profile",
+                                         h3(
+                                                 "Interactive scale visulization for m/z-rt profile"
+                                         ),
+                                         p("You could brush an area to see the enlarged results in bottom plot and the points list in the table."),
                                          plotOutput("plotcsv",click = "plotcsv_click",hover = "plotcsv_hover",
                                                     brush = brushOpts(
                                                             id = "plotcsvs_brush",
@@ -142,6 +146,7 @@ shinyUI(fluidPage(
                                 tabPanel("PCA",
                                          plotOutput("plotpca")),
                                 tabPanel("Batch Correction",
+                                         h3("Surrogate Variable analysis(sva) correction")
                                          plotOutput("datacorp"),
                                          plotOutput("datacorpca")),
                                 
