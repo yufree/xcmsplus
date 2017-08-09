@@ -31,10 +31,10 @@ shinyUI(fluidPage(
                                 max = 10,
                                 value = 5
                         ),
-                        sliderInput("mz", "mass Range",
-                                    min = 50, max = 1000, value = c(200,800)),
-                        sliderInput("rt", "RT Range",
-                                    min = 0, max = 5000, value = c(3000,4000)),
+                        # sliderInput("mz", "mass Range",
+                        #             min = 50, max = 1000, value = c(200,800)),
+                        # sliderInput("rt", "RT Range",
+                        #             min = 0, max = 5000, value = c(3000,4000)),
                         "This app is created by ",
                         a("Miao Yu", href = "mailto:yufreecas@gmail.com")
                         
@@ -46,8 +46,8 @@ shinyUI(fluidPage(
                                 type = "tabs",
                                 id = 'dataset',
                                 tabPanel(
-                                        'Description',
-                                        h5(
+                                        'Usage',
+                                        h3(
                                                 "This app is developed for xcmsSet object and related csv file data visualization."
                                         ),
                                         br(),
@@ -104,20 +104,55 @@ shinyUI(fluidPage(
                                         a("Github", href = "https://github.com/yufree/xcmsplus"),
                                         "if you have questions."
                                 ),
-                                tabPanel("csv",
-                                         plotOutput("plot5")),
-                                tabPanel("Peaklist",
-                                         dataTableOutput('datacsv'),
-                                         dataTableOutput('dataxset')
+                                tabPanel("m/z-rt profile",
+                                         h3(
+                                                 "Interactive scale visulization for m/z-rt profile"
                                          ),
-                                tabPanel("Peaks",
-                                         plotOutput("plot1")),
-                                tabPanel("Background subtraction",
-                                         plotOutput("plot2")),
-                                tabPanel("RSD",
-                                         plotOutput("plot3")),
+                                         p("You could brush an area to see the enlarged results in bottom plot and the points list in the table."),
+                                         plotOutput("plotmr",click = "plot_click",hover = "plot_hover",
+                                                    brush = brushOpts(
+                                                            id = "plotmrs_brush",
+                                                            resetOnNew = TRUE
+                                                    )
+                                         ),
+                                         verbatimTextOutput("info"),
+                                         plotOutput('plotmrs',click = "plot_click2",hover = "plot_hover2"),
+                                         verbatimTextOutput("info2"),
+                                         h4("Brushed points"),
+                                         dataTableOutput("brush_info")
+                                         ),
+                                tabPanel("csv m/z-rt profile",
+                                         plotOutput("plotcsv",click = "plotcsv_click",hover = "plotcsv_hover",
+                                                    brush = brushOpts(
+                                                            id = "plotcsvs_brush",
+                                                            resetOnNew = TRUE
+                                                    )
+                                         ),
+                                         verbatimTextOutput("infocsv"),
+                                         plotOutput('plotcsvs',click = "plotcsv_click2",hover = "plotcsv_hover2"),
+                                         verbatimTextOutput("info2csv"),
+                                         h4("Brushed points"),
+                                         dataTableOutput("brush_info_csv")
+                                ),
+                                # tabPanel("Background subtraction",
+                                #          plotOutput("plot2",click = "plot_click")
+                                #          ),
+                                # tabPanel("RSD", plotOutput("plot3",click =
+                                # "plot_click")),
                                 tabPanel("PCA",
-                                         plotOutput("plot4")),
+                                         plotOutput("plotpca")),
+                                tabPanel("Batch Correction",
+                                         plotOutput("datacorp"),
+                                         plotOutput("datacorpca")),
+                                
+                                # tabPanel("Corrected Peaklist"
+                                #          
+                                # ),
+                                
+                                # tabPanel("Peaklist",
+                                #          dataTableOutput('datacsv'),
+                                #          dataTableOutput('dataxset')
+                                # ),
                                 tabPanel(
                                         "References",
                                         p(

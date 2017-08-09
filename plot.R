@@ -1,6 +1,5 @@
 #' plot the scatter plot for xcmsset objects with threshold
 #' @param xset the xcmsset object
-#' @param ms the mass range to plot the data
 #' @param inscf Log intensity cutoff for peaks, default 5
 #' @param rsdcf the rsd cutoff of all peaks
 #' @param ... parameters for `plot` function
@@ -14,30 +13,30 @@
 #' }
 #' @export
 plotmr <- function(xset,
-                   ms = c(100, 800),
                    inscf = 5,
                    rsdcf = 30,
                    ...) {
+        par(mar=c(5, 4.2, 6.1, 2.1), xpd=TRUE)
         data <- getbiorep(xset, rsdcf = rsdcf, inscf = inscf)
         suppressWarnings(if (!is.na(data)) {
                 datamean <- data[, grepl('*mean', colnames(data))]
                 dataname <- unique(xcms::sampclass(xset))
                 n <- dim(datamean)[2]
                 col <- grDevices::rainbow(n, alpha = 0.318)
-                
                 graphics::plot(
                         data$mzmed ~ data$rtmed,
                         xlab = "Retention Time(s)",
                         ylab = "m/z",
-                        ylim = ms,
-                        type = 'n',
                         pch = 19,
+                        type = 'n',
                         ...
                 )
                 
                 for (i in 1:n) {
                         cex = as.numeric(cut((log10(datamean[, i] + 1)-inscf), breaks=c(0,1,2,3,4,Inf)/2))/2
                         cexlab = c(paste0(inscf,'-',inscf+0.5),paste0(inscf+0.5,'-',inscf+1),paste0(inscf+1,'-',inscf+1.5),paste0(inscf+1.5,'-',inscf+2),paste0('>',inscf+2))
+                        
+                        
                         graphics::points(
                                 x = data$rtmed,
                                 y = data$mzmed,
@@ -46,24 +45,98 @@ plotmr <- function(xset,
                                 pch = 19
                         )
                 }
-                legend(
-                        'bottom',
+                graphics::legend(
+                        'topright',
                         legend = dataname,
                         col = col,
                         pch = 19,
                         horiz = T,
-                        bty = 'n'
+                        bty = 'n',
+                        inset = c(0,-0.25)
                 )
-                legend(
-                        'top',
+                graphics::legend(
+                        'topleft',
                         legend = cexlab,
                         title = 'Intensity in Log scale',
                         pt.cex = c(1,2,3,4,5)/2,
                         pch = 19,
                         bty = 'n',
                         horiz = T,
-                        cex = 0.8,
-                        col = grDevices::rgb(0,0,0,0.318)
+                        cex = 0.7,
+                        col = grDevices::rgb(0,0,0,0.318),inset = c(0,-0.25)
+                )
+        } else{
+                graphics::plot(
+                        1,
+                        xlab = "Retention Time(s)",
+                        ylab = "m/z",
+                        main = "No peaks found",
+                        ylim = ms,
+                        type = 'n',
+                        pch = 19,
+                        ...
+                )
+        })
+}
+
+plotmr2 <- function(xset,
+                   inscf = 5,
+                   rsdcf = 30,
+                   ms = NULL,
+                   rt = NULL,
+                   ...) {
+        par(mar=c(5, 4.2, 6.1, 2.1), xpd=TRUE)
+        data <- getbiorep(xset, rsdcf = rsdcf, inscf = inscf)
+        suppressWarnings(if (!is.na(data)) {
+                datamean <- data[, grepl('*mean', colnames(data))]
+                dataname <- unique(xcms::sampclass(xset))
+                n <- dim(datamean)[2]
+                col <- grDevices::rainbow(n, alpha = 0.318)
+                graphics::plot(
+                        data$mzmed ~ data$rtmed,
+                        xlab = "Retention Time(s)",
+                        ylab = "m/z",
+                        pch = 19,
+                        type = 'n',
+                        xlim = rt,
+                        ylim = ms,
+                        ...
+                )
+                
+                for (i in 1:n) {
+                        index <- data$rtmed>rt[1]&data$rtmed<rt[2]&data$mzmed>ms[1]&data$mzmed<ms[2]
+                        data <- data[index,]
+                        cex = as.numeric(cut((log10(datamean[, i] + 1)-inscf), breaks=c(0,1,2,3,4,Inf)/2))/2
+                        cexlab = c(paste0(inscf,'-',inscf+0.5),paste0(inscf+0.5,'-',inscf+1),paste0(inscf+1,'-',inscf+1.5),paste0(inscf+1.5,'-',inscf+2),paste0('>',inscf+2))
+                        
+                        
+                        graphics::points(
+                                x = data$rtmed,
+                                y = data$mzmed,
+                                cex = cex[index],
+                                col = col[i],
+                                pch = 19
+                        )
+                }
+                graphics::legend(
+                        'topright',
+                        legend = dataname,
+                        col = col,
+                        pch = 19,
+                        horiz = T,
+                        bty = 'n',
+                        inset = c(0,-0.25)
+                )
+                graphics::legend(
+                        'topleft',
+                        legend = cexlab,
+                        title = 'Intensity in Log scale',
+                        pt.cex = c(1,2,3,4,5)/2,
+                        pch = 19,
+                        bty = 'n',
+                        horiz = T,
+                        cex = 0.7,
+                        col = grDevices::rgb(0,0,0,0.318),inset = c(0,-0.25)
                 )
         } else{
                 graphics::plot(
@@ -209,7 +282,7 @@ plotrsd <- function(xset,
                                 pch = 19,
                                 ...
                         )
-                        legend(
+                        graphics::legend(
                                 'top',
                                 legend = cexlab,
                                 pt.cex = c(1,2,3,4,5)/2,
@@ -248,7 +321,7 @@ plotrsd <- function(xset,
                                 pch = 19,
                                 ...
                         )
-                        legend(
+                        graphics::legend(
                                 'top',
                                 legend = cexlab,
                                 pt.cex = c(1,2,3,4,5)/2,
@@ -256,7 +329,7 @@ plotrsd <- function(xset,
                                 pch = 19,
                                 bty = 'n',
                                 horiz = T,
-                                col = grDevices::rgb(0,0,0,0.318),
+                                col = grDevices::rgb(0,0,0,0.318)
                                 
                         )
                 } else{
@@ -302,7 +375,7 @@ plotrsd <- function(xset,
                                 pch = 19
                         )
                 }
-                legend(
+                graphics::legend(
                         'bottom',
                         legend = dataname,
                         col = col,
@@ -310,7 +383,7 @@ plotrsd <- function(xset,
                         pch = 19,
                         bty = 'n'
                 )
-                legend(
+                graphics::legend(
                         'top',
                         legend = cexlab,
                         pt.cex = c(1,2,3,4,5)/2,
@@ -348,7 +421,7 @@ plotpca <- function(xset,
                     scale = T,
                     ...) {
         data <- xcms::groupval(xset, 'medret', 'into')
-        data <- data[complete.cases(data),]
+        data <- data[stats::complete.cases(data),]
         if (is.null(lv)) {
                 pch = colnames(data)
         } else {
@@ -404,7 +477,6 @@ plote <- function(xset,
 
 #' plot scatter plot for rt-mz profile and output gif file for mutiple groups
 #' @param xset xcmsset object with mutiple groups
-#' @param ms the mass range to plot the data
 #' @param file file name for further annotation, default NULL
 #' @param inscf log intensity cutoff for peaks, default 5
 #' @param rsdcf the rsd cutoff of all peaks
@@ -434,7 +506,7 @@ gifmr <- function(xset,
                 ylab = "m/z",
                 pch = 19,
                 cex = log10(mean + 1) - 4,
-                col = rgb(0, 0, 1, 0.2),
+                col = grDevices::rgb(0, 0, 1, 0.2),
                 main = 'All peaks'
         )
         filename = paste0(file, '.gif')
