@@ -12,10 +12,10 @@ shinyUI(fluidPage(
                         fileInput('file',
                                   label = 'R Dataset with xcmsSet object in it',
                                   accept = c('.RData')),
-                        h4('Uploading csv Files'),
+                        h4('Uploading csv file or mzXML file'),
                         fileInput('file2',
-                                  label = 'csv Files',
-                                  accept = c('.csv')),
+                                  label = 'csv File or mzXML File',
+                                  accept = c('.csv','.mzXML')),
                         h4('Data filter'),
                         sliderInput(
                                 "rsd",
@@ -149,7 +149,11 @@ shinyUI(fluidPage(
                                          h3("Surrogate Variable analysis(sva) correction"),
                                          plotOutput("datacorp"),
                                          plotOutput("datacorpca")),
-                                
+                                tabPanel("DART",
+                                         h3("DART"),
+                                         plotOutput("dart"),
+                                         plotOutput("darttic")
+                                         ),
                                 # tabPanel("Corrected Peaklist"
                                 #          
                                 # ),

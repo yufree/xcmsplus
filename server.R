@@ -9,6 +9,7 @@ library(xcms)
 source('plot.R')
 source('doe.R')
 source('sva.R')
+source('dart.R')
 
 LoadToEnvironment <- function(RData, env = new.env()) {
         load(RData, env)
@@ -323,6 +324,22 @@ shinyServer(function(input, output, session) {
                 else
                         li <- svacor(xset)
                         svapca(list = li)
+        })
+        
+        output$dart <- renderPlot({
+                if (is.null(input$file2$datapath))
+                        return()
+                else
+                        data <- xcms::xcmsRaw(input$file2$datapath)
+                plotdart(data, cf = input$ins)
+        })
+        
+        output$darttic <- renderPlot({
+                if (is.null(input$file2$datapath))
+                        return()
+                else
+                        data <- xcms::xcmsRaw(input$file2$datapath)
+                xcms::plotTIC(data)
         })
         
         
