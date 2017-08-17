@@ -342,5 +342,11 @@ shinyServer(function(input, output, session) {
                 xcms::plotTIC(data)
         })
         
-        
+        output$dartms <- renderPlot({
+                if (is.null(input$file2$datapath))
+                        return()
+                else
+                        data <- xcms::xcmsRaw(input$file2$datapath)
+                plotdartms(data)
+        })
 })
