@@ -35,6 +35,28 @@ shinyUI(fluidPage(
                                 max = 10,
                                 value = 5
                         ),
+                        h5('Data Simulation'),
+                        sliderInput(
+                                "ncomp",
+                                "Percentage of the compounds",
+                                min = 0,
+                                max = 1,
+                                value = 0.8
+                        ),
+                        sliderInput(
+                                "ncpeaks",
+                                "Percentage of the peaks influnced by condition",
+                                min = 0,
+                                max = 1,
+                                value = 0.1
+                        ),
+                        sliderInput(
+                                "nbpeaks",
+                                "Percentage of the peaks influnced by batch",
+                                min = 0,
+                                max = 1,
+                                value = 0.3
+                        ),
                         # sliderInput("mz", "mass Range",
                         #             min = 50, max = 1000, value = c(200,800)),
                         # sliderInput("rt", "RT Range",
@@ -223,7 +245,14 @@ shinyUI(fluidPage(
                                         plotOutput("datacorp"),
                                         plotOutput("datacorpca")
                                 ),
-                                
+                                tabPanel(
+                                        "mzrt simulation",
+                                        h3("Simulation of mzrt profile"),
+                                        h4("Raw data"),
+                                        plotOutput("sim"),
+                                        h4("Raw data corrected"),
+                                        plotOutput("sim2")
+                                ),
                                 # tabPanel("Background subtraction",
                                 #          plotOutput("plot2",click = "plot_click")
                                 #          ),

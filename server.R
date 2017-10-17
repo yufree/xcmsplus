@@ -10,6 +10,7 @@ source('plot.R')
 source('doe.R')
 source('sva.R')
 source('dart.R')
+source('mzrtsim.R')
 
 LoadToEnvironment <- function(RData, env = new.env()) {
         load(RData, env)
@@ -349,4 +350,17 @@ shinyServer(function(input, output, session) {
                         data <- xcms::xcmsRaw(input$file2$datapath)
                 plotdartms(data)
         })
+        
+        # simulation data
+        observe({
+                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+        })
+        output$sim <- renderPlot({
+                ridgesplot(sim$data, as.factor(sim$con))
+        })
+        output$sim2 <- renderPlot({
+                sim2 <- svacor2(log(sim$data), as.factor(sim$con))
+                ridgesplot(exp(sim2$dataCorrected), as.factor(sim$con))
+        })
+        
 })
