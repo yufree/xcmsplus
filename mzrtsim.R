@@ -270,7 +270,7 @@ simmzrt <- function(data,
 #' ridgesplot(sim$data, as.factor(sim$con))
 #' @export
 ridgesplot <- function(data, lv, type = 'g') {
-        data <- log10(data)
+        data <- log(data)
         data[is.nan(data)] <- 0
         outmat = NULL
         
@@ -300,4 +300,28 @@ ridgesplot <- function(data, lv, type = 'g') {
                 ggplot2::xlim(-1, 1) +
                 ggplot2::scale_fill_discrete(name = "Group") +
                 ggplot2::labs(x = "Relative Log Abundance", y = 'Samples')
+}
+
+simroc <- function(sim){
+                sim2 <- svacor2(log(sim$data), as.factor(sim$con))
+                sim3 <- isvacor(log(sim$data), as.factor(sim$con))
+        indexc <- sim$conp
+        TPR <- FPR <- TPRsva <- FPRsva <- TPRisva <- FPRisva<- c(1:100)
+        for(i in 1:100){
+                indexi <- which(sim2$`p-valuesCorrected`< i*0.01,arr.ind = T)
+                indexoi <- which(sim2$`p-values`< i*0.01, arr.ind = T)
+                indexii <- which(sim3$`p-valuesCorrected`< i*0.01,arr.ind = T)
+                
+                TPR[i] <- length(intersect(indexoi,indexc))/length(indexc)
+                FPR[i] <- (length(indexoi)-length(intersect(indexoi,indexc)))/(nrow(sim$data) - length(indexc))
+                TPRsva[i] <- length(intersect(indexi,indexc))/length(indexc)
+                FPRsva[i] <- (length(indexi)-length(intersect(indexi,indexc)))/(nrow(sim$data) - length(indexc))
+                TPRisva[i] <- length(intersect(indexii,indexc))/length(indexc)
+                FPRisva[i] <- (length(indexii)-length(intersect(indexii,indexc)))/(nrow(sim$data) - length(indexc))
+                
+        }
+        plot(TPR~FPR,col = 'red',pch = 19,type = 'l',xlim = c(0,1),ylim =c(0,1))
+        lines(TPRsva~FPRsva,col = 'blue',pch = 19)
+        lines(TPRisva~FPRisva,col = 'green',pch = 19)
+        legend('bottomright',legend = c('raw','sva', 'isva'),pch = 19, col = c('red','blue','green'))
 }

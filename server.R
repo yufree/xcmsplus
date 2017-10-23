@@ -352,15 +352,28 @@ shinyServer(function(input, output, session) {
         })
         
         # simulation data
-        observe({
-                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
-        })
         output$sim <- renderPlot({
+                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+                simroc(sim)
+        })
+        output$sim1 <- renderPlot({
+                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
                 ridgesplot(sim$data, as.factor(sim$con))
         })
         output$sim2 <- renderPlot({
+                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
                 sim2 <- svacor2(log(sim$data), as.factor(sim$con))
-                ridgesplot(exp(sim2$dataCorrected), as.factor(sim$con))
+                par(mfrow = c(1,2))
+                hist(sim2$`p-valuesCorrected`,main = 'p value corrected')
+                hist(sim2$`p-values`,main = 'p value')
         })
+        output$sim3 <- renderPlot({
+                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+                sim2 <- isvacor(log(sim$data), as.factor(sim$con))
+                par(mfrow = c(1,2))
+                hist(sim2$`p-valuesCorrected`,main = 'p value corrected')
+                hist(sim2$`p-values`,main = 'p value')
+        })
+        
         
 })
