@@ -18,7 +18,7 @@ shinyUI(
                         ),
                         h6("Data visualization of peaks list: Tab MZRT"),
                         
-                        h6("Batch Correction:Tab batch simulation and correction"),
+                        h6("Batch Simulation and Correction: Tab BSC"),
                         
                         h6("Direct Analysis in Real Time (DART) data visualization:Tab DART"),
                         
@@ -133,7 +133,7 @@ shinyUI(
                                 tabPanel("PCA",
                                          plotOutput("plotpca"))
                         ))))),
-        tabPanel('Batch Simulation and correction'
+        tabPanel('BSC'
                  ,sidebarLayout(sidebarPanel(h5('Data Simulation'),
                                              sliderInput(
                                                      "ncomp",
@@ -156,7 +156,7 @@ shinyUI(
                                                      max = 1,
                                                      value = 0.3
                                              )),
-                                mainPanel(h3("Simulation of mzrt profile"),
+                                mainPanel(h3("Batch Simulation and correction"),
                                           h4('ROC curve'),
                                           plotOutput('sim'),
                                           h4("Raw data"),
@@ -179,7 +179,7 @@ shinyUI(
                                         h4("Multiple files"),
                                         fileInput(
                                                 'filedart2',
-                                                label = 'mzXML file',
+                                                label = 'mzXML files',
                                                 multiple = T,
                                                 accept = c('.mzXML')
                                         ),
