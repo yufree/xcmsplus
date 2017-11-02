@@ -5,12 +5,12 @@
 # You might need the develop version of enviGCMS to run this app. Try `devtools::install_github('yufree/enviGCMS')`
 library(shiny)
 library(xcms)
-library(enviGCMS)
 library(DT)
 
 source('sva.R')
 source('dart.R')
 source('mzrtsim.R')
+source('mzrt.R')
 
 xy_str <- function(e) {
         if(is.null(e)) return("NULL\n")
@@ -37,7 +37,7 @@ shinyServer(function(input, output) {
         # peaklist filter
         datafilter <- reactive({
                 li <- datainput()
-                list = enviGCMS::getdoe(li,inscf = input$ins, rsdcf = input$rsd, imputation = 'l', tr = F)
+                list = getdoe(li,inscf = input$ins, rsdcf = input$rsd, imputation = 'l', tr = F)
                 
                 dt <- cbind.data.frame(list$mzfiltered, list$rtfiltered, list$groupmeanfiltered,list$groupsdfiltered,list$grouprsdfiltered,list$datafiltered)
                 colnames(dt) <- c('mz','rt',paste0(colnames(list$groupmean),'mean'),paste0(colnames(list$groupmean),'sd'),paste0(colnames(list$groupmean),'rsd%'),colnames(list$datafiltered))
@@ -56,13 +56,13 @@ shinyServer(function(input, output) {
         ranges <- reactiveValues(x = NULL, y = NULL)
         output$plotmr <- renderPlot({
                 li <- datainput()
-                enviGCMS::plotmr(li,
+                plotmr(li,
                                 rsdcf = input$rsd,
                                 inscf = input$ins)
          })
         output$plotmrs <- renderPlot({
                 li <- datainput() 
-                enviGCMS::plotmr(li,
+                plotmr(li,
                                rsdcf = input$rsd,
                                inscf = input$ins,
                                ms = ranges$y,
@@ -107,7 +107,7 @@ shinyServer(function(input, output) {
         # plotpca
         output$plotpca <- renderPlot({
                 list <- datainput()
-                enviGCMS::plotpca(list$data,lv = as.character(list$group[,1]))
+                plotpca(list$data,lv = as.character(list$group[,1]))
         })
 
         
@@ -143,7 +143,7 @@ shinyServer(function(input, output) {
                         xsg <- fillPeaks.MSW(xsg)
                         r <- groupval(xsg,'medret','into')
                         z <- as.data.frame(groups(xsg))
-                        file <- cbind(z$mz,r)
+                        file <- cbind(z$mzmin,r)
                         
                         return(file)
                 }else{

@@ -90,7 +90,7 @@ shinyUI(
                                                  h4("Use demo data"),
                                                  p(
                                                          "You could download demo data",
-                                                         a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true")
+                                                         a("here", href = "https://github.com/yufree/xcmsplus/blob/master/data/test.csv?raw=true")
                                                  )
                                          ),
                                          p(
@@ -201,7 +201,7 @@ shinyUI(
                                         h4("Use demo data"),
                                         p(
                                                 "You could download demo",
-                                                a('data', href = "https://github.com/yufree/xcmsplus/blob/master/test.mzXML?raw=true"),
+                                                a('data', href = "https://github.com/yufree/xcmsplus/blob/master/data/test.mzXML?raw=true"),
                                                 "here and have a try."
                                         ),
                                         h4("Usage"),
