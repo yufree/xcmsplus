@@ -138,12 +138,12 @@ shinyServer(function(input, output) {
         
         dartfilter <- reactive({
                 if (!is.null(input$filedart2)){
-                        xs <- xcmsSet(method="MSW", files=input$filedart$datapath)
+                        xs <- xcmsSet(method="MSW", files=input$filedart2$datapath)
                         xsg <- group.mzClust(xs)
                         xsg <- fillPeaks.MSW(xsg)
                         r <- groupval(xsg,'medret','into')
                         z <- as.data.frame(groups(xsg))
-                        file <- cbind(z$mzmin,r)
+                        file <- cbind(mz = z$mzmin,r)
                         
                         return(file)
                 }else{
