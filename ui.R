@@ -16,11 +16,11 @@ shinyUI(
                         p(
                                 "This online application could perform the following data analysis/visualization:"
                         ),
-                        h6("Data visualization of m/z-rt profile: Tab m/z-rt profile"),
-                        
-                        h6("Direct Analysis in Real Time (DART) data visualization:Tab DART"),
+                        h6("Data visualization of peaks list: Tab MZRT"),
                         
                         h6("Batch Correction:Tab batch simulation and correction"),
+                        
+                        h6("Direct Analysis in Real Time (DART) data visualization:Tab DART"),
                         
                         em('Click the tab and have a try'),
                         br(),
@@ -32,40 +32,37 @@ shinyUI(
                 )
         ),
         
-        tabPanel("m/z-rt profile", fluidPage(
+        tabPanel("MZRT", fluidPage(
                 sidebarLayout(
                         # Sidebar with a slider input for rsd and ins
                         sidebarPanel(
-                                h4('Uploading Files'),
+                                h4('Uploading File'),
                                 fileInput('file',
-                                          label = 'R Dataset with xcmsSet object in it',
-                                          accept = c('.RData')),
-                                fileInput(
-                                        'file2',
-                                        label = 'csv file or mzXML file',
-                                        accept = c('.csv', '.mzXML')
-                                ),
+                                          label = 'csv file with m/z, retention time, peaklist and group info',
+                                          accept = c('.csv')),
                                 h4('Data filter'),
                                 sliderInput(
                                         "rsd",
-                                        "RSD(%)",
+                                        "RSD(%) within group",
                                         min = 1,
-                                        max = 100,
-                                        value = 30
+                                        max = 200,
+                                        value = 30,
+                                        step = 1
                                 ),
                                 sliderInput(
                                         "ins",
                                         "Intensity in Log scale",
                                         min = 1,
-                                        max = 10,
-                                        value = 5
+                                        max = 15,
+                                        value = 5,
+                                        step = 0.1
                                 )
                         ),
                         mainPanel(tabsetPanel(
                                 type = "tabs",
-                                tabPanel("m/z-rt profile",
-                                         h3("Interactive scale visulization for m/z-rt profile"),
-                                         h4("Prepaer the data"),
+                                tabPanel("MZRT Guide",
+                                         h3("Interactive scale visulization for peaks list"),
+                                         h4("Prepare the data"),
                                          p(
                                                  "The following code would help:"
                                                  ,
@@ -75,6 +72,8 @@ shinyUI(
                                                          br(),
                                                          "install.package('enviGCMS')",
                                                          br(),
+                                                         "# use devtools::install_github('yufree/enviGCMS') for new functions",
+                                                         br(),
                                                          "library(xcms)",
                                                          br(),
                                                          "library(enviGCMS)",
@@ -83,120 +82,110 @@ shinyUI(
                                                          br(),
                                                          "xset <- getdata(path)",
                                                          br(),
-                                                         "save(xset,file = 'xset.RData')",
+                                                         "getmzrt(xset,name = 'test')",
                                                          br()
                                                  ),
                                                  br(),
-                                                 p("Then just upload your 'xset.RData' to this app."),
+                                                 p("Then just upload your 'test.csv' to this app ( or use ",code("getmzrt2")," for xcms 3 objects)."),
                                                  h4("Use demo data"),
                                                  p(
                                                          "You could download demo data",
-                                                         a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.RData?raw=true")
+                                                         a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true")
                                                  )
                                          ),
-                                         h4("Usage"),
                                          p(
                                                  "After uploading the data, you could change the RSD%, intensity(in Log scale) by the side slides to filter your data."
                                          ),
                                          p(
-                                                 "You could also brush an area in the left plot to see the enlarged results in right plot and the points listed in the table below the plots."
-                                         ),
-                                         column(
-                                                 6,
-                                                 plotOutput(
-                                                         "plotmr",
-                                                         click = "plot_click",
-                                                         hover = "plot_hover",
-                                                         brush = brushOpts(id = "plotmrs_brush",
-                                                                           resetOnNew = TRUE)
-                                                 ),
-                                                 verbatimTextOutput("info")
-                                         ),
-                                         column(
-                                                 6,
-                                                 plotOutput('plotmrs', click = "plot_click2", hover = "plot_hover2"),
-                                                 verbatimTextOutput("info2")
-                                         ),
-                                         h4("Brushed points"),
-                                         dataTableOutput("brush_info")
+                                                 "Then click 'Profile visulization' or 'PCA' tabs to visulize the data."
+                                         )
                                 ),
+                                tabPanel("Data Table",
+                                         h4("Data table for peaks list"),
+                                         dataTableOutput("datatable"),
+                                         p(downloadButton('data', 'Download Filtered Data'))),
                                 tabPanel(
-                                        "csv m/z-rt profile",
-                                        h3("Interactive scale visulization for m/z-rt profile"),
-                                        h4("Prepaer the data"),
-                                        p(
-                                                "The following code would help:"
-                                                ,
-                                                br(),
-                                                code(
-                                                        "BiocInstaller::biocLite('xcms')",
-                                                        br(),
-                                                        "install.package('enviGCMS')",
-                                                        br(),
-                                                        "library(xcms)",
-                                                        br(),
-                                                        "library(enviGCMS)",
-                                                        br(),
-                                                        "path <- './data'",
-                                                        br(),
-                                                        "xset <- getdata(path)",
-                                                        "getbiorep(xset,file = 'test')",
-                                                        br()
-                                                )
-                                        ),
-                                        p(
-                                                "You could find the csv file to be uploaded in your working folder with the name of 'test.csv'."
-                                        ),
-                                        p(
-                                                "You could also export data from xcms online or mzMine. The first column should be m/z and the second column should be time in seconds. The following columns should be the mean intensities in multiple groups."
-                                        ),
-                                        h4("Use demo data"),
-                                        
-                                        p(
-                                                "You could also download and upload a demo csv file",
-                                                a("here", href = "https://github.com/yufree/xcmsplus/blob/master/test.csv?raw=true"),
-                                                "."
-                                        ),
-                                        h4("Usage"),
-                                        p(
-                                                "After uploading the data, you could change intensity(in Log scale) by the side slides to filter your data. The RSD% filter is not working in this mode."
-                                        ),
+                                        "Visulization",
                                         p(
                                                 "You could brush an area in the left plot to see the enlarged results in right plot and the points listed in the table below the plots."
                                         ),
                                         column(
                                                 6,
                                                 plotOutput(
-                                                        "plotcsv",
-                                                        click = "plotcsv_click",
-                                                        hover = "plotcsv_hover",
-                                                        brush = brushOpts(id = "plotcsvs_brush",
+                                                        "plotmr",
+                                                        click = "plot_click",
+                                                        hover = "plot_hover",
+                                                        brush = brushOpts(id = "plotmrs_brush",
                                                                           resetOnNew = TRUE)
                                                 ),
-                                                verbatimTextOutput("infocsv")
+                                                verbatimTextOutput("info")
                                         ),
                                         column(
                                                 6,
-                                                plotOutput('plotcsvs', click = "plotcsv_click2", hover = "plotcsv_hover2"),
-                                                verbatimTextOutput("info2csv")
+                                                plotOutput('plotmrs', click = "plot_click2", hover = "plot_hover2"),
+                                                verbatimTextOutput("info2")
                                         ),
                                         h4("Brushed points"),
-                                        dataTableOutput("brush_info_csv")
+                                        dataTableOutput("brush_info"),
+                                        p(downloadButton('dataselect', 'Download Selected Data'))
+                                        
                                 ),
                                 tabPanel("PCA",
                                          plotOutput("plotpca"))
                         ))))),
+        tabPanel('Batch Simulation and correction'
+                 ,sidebarLayout(sidebarPanel(h5('Data Simulation'),
+                                             sliderInput(
+                                                     "ncomp",
+                                                     "Percentage of the compounds",
+                                                     min = 0,
+                                                     max = 1,
+                                                     value = 0.8
+                                             ),
+                                             sliderInput(
+                                                     "ncpeaks",
+                                                     "Percentage of the peaks influnced by condition",
+                                                     min = 0,
+                                                     max = 1,
+                                                     value = 0.1
+                                             ),
+                                             sliderInput(
+                                                     "nbpeaks",
+                                                     "Percentage of the peaks influnced by batch",
+                                                     min = 0,
+                                                     max = 1,
+                                                     value = 0.3
+                                             )),
+                                mainPanel(h3("Simulation of mzrt profile"),
+                                          h4('ROC curve'),
+                                          plotOutput('sim'),
+                                          h4("Raw data"),
+                                          plotOutput("sim1"),
+                                          h4("Raw data corrected(sva)"),
+                                          plotOutput("sim2"),
+                                          h4("Raw data corrected(isva)"),
+                                          plotOutput("sim3")))),
+        
                 tabPanel("DART", fluidPage(
                         sidebarLayout(
                                 sidebarPanel(
+                                        h4("Single file"),
                                         fileInput(
-                                                'file2',
-                                                label = 'csv file or mzXML file',
-                                                accept = c('.csv', '.mzXML')
+                                                'filedart',
+                                                label = 'mzXML file',
+                                                
+                                                accept = c('.mzXML')
+                                        ),
+                                        h4("Multiple files"),
+                                        fileInput(
+                                                'filedart2',
+                                                label = 'mzXML file',
+                                                multiple = T,
+                                                accept = c('.mzXML')
                                         ),
                                         h4('Data filter'),
                                         sliderInput(
-                                                "ins",
+                                                "insdart",
                                                 "Intensity in Log scale",
                                                 min = 1,
                                                 max = 10,
@@ -221,41 +210,11 @@ shinyUI(
                                         ),
                                         plotOutput("dart"),
                                         plotOutput("darttic"),
-                                        plotOutput("dartms")
+                                        plotOutput("dartms"),
+                                        dataTableOutput("darttable"),
+                                        p(downloadButton('datadart', 'Download Selected Data'))
                                 )
                         ))),
-                tabPanel('Batch Simulation and correction'
-                         ,sidebarLayout(sidebarPanel(h5('Data Simulation'),
-                                                     sliderInput(
-                                                             "ncomp",
-                                                             "Percentage of the compounds",
-                                                             min = 0,
-                                                             max = 1,
-                                                             value = 0.8
-                                                     ),
-                                                     sliderInput(
-                                                             "ncpeaks",
-                                                             "Percentage of the peaks influnced by condition",
-                                                             min = 0,
-                                                             max = 1,
-                                                             value = 0.1
-                                                     ),
-                                                     sliderInput(
-                                                             "nbpeaks",
-                                                             "Percentage of the peaks influnced by batch",
-                                                             min = 0,
-                                                             max = 1,
-                                                             value = 0.3
-                                                     )),
-                                        mainPanel(h3("Simulation of mzrt profile"),
-                                                  h4('ROC curve'),
-                                                  plotOutput('sim'),
-                                                  h4("Raw data"),
-                                                  plotOutput("sim1"),
-                                                  h4("Raw data corrected(sva)"),
-                                                  plotOutput("sim2"),
-                                                  h4("Raw data corrected(isva)"),
-                                                  plotOutput("sim3")))),
                 tabPanel(
                         "References",
                         p(
