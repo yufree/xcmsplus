@@ -156,15 +156,38 @@ shinyUI(
                                                      max = 1,
                                                      value = 0.3
                                              )),
-                                mainPanel(h3("Batch Simulation and correction"),
-                                          h4('ROC curve'),
-                                          plotOutput('sim'),
-                                          h4("Raw data"),
-                                          plotOutput("sim1"),
-                                          h4("Raw data corrected(sva)"),
-                                          plotOutput("sim2"),
-                                          h4("Raw data corrected(isva)"),
-                                          plotOutput("sim3")))),
+                                mainPanel(
+                                        tabsetPanel(
+                                        type = "tabs",
+                                        tabPanel(h3("Batch Simulation "),
+                                                 h4('Simulated Data'),
+                                                 plotOutput("simdatah"),
+                                                 dataTableOutput("simdata"),
+                                                 p(downloadButton('simdatad', 'Download Data')),
+                                                 h4("Simulated Data without conditions"),
+                                                 plotOutput("simbatchallh"),
+                                                 dataTableOutput("simbatchall"),
+                                                 p(downloadButton('simbatchalld', 'Download Data')),
+                                                 h4("Batch Peaks"),
+                                                 plotOutput("simbatchh"),
+                                                 dataTableOutput("simbatch"),
+                                                 p(downloadButton('simbatchd', 'Download Data')),
+                                                 h4("Condition Peaks"),
+                                                 plotOutput("simconh"),
+                                                 dataTableOutput("simcon"),
+                                                 p(downloadButton('simcond', 'Download Data'))),        
+                                tabPanel(h3("Batch Correction"),
+                                         h4('ROC curve'),
+                                         plotOutput('sim0'),
+                                         h4("Raw data"),
+                                         plotOutput("sim1"),
+                                         h4("Raw data corrected(sva)"),
+                                         plotOutput("sim2"),
+                                         h4("Raw data corrected(isva)"),
+                                         plotOutput("sim3"))
+                                )
+                                
+                                ))),
         
                 tabPanel("DART", fluidPage(
                         sidebarLayout(

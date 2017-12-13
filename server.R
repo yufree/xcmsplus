@@ -160,28 +160,98 @@ shinyServer(function(input, output) {
         })
         
         # simulation data
-        output$sim <- renderPlot({
-                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+        sim <- reactive({
+                return(mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks))
+        })
+        output$sim0 <- renderPlot({
+                sim <- sim()
                 simroc(sim)
         })
+        
         output$sim1 <- renderPlot({
-                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+                sim <- sim()
                 ridgesplot(sim$data, as.factor(sim$con))
         })
         output$sim2 <- renderPlot({
-                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+                sim <- sim()
                 sim2 <- svacor2(log(sim$data), as.factor(sim$con))
                 par(mfrow = c(1,2))
-                hist(sim2$`p-valuesCorrected`,main = 'p value corrected')
-                hist(sim2$`p-values`,main = 'p value')
+                hist(sim2$`p-valuesCorrected`,main = 'p value corrected',xlab = "")
+                hist(sim2$`p-values`,main = 'p value',xlab = '')
         })
         output$sim3 <- renderPlot({
-                sim <- mzrtsim(npeaks = 2000, ncomp = input$ncomp, ncpeaks = input$ncpeaks, nbpeaks = input$nbpeaks)
+                sim <- sim()
                 sim2 <- isvacor(log(sim$data), as.factor(sim$con))
                 par(mfrow = c(1,2))
-                hist(sim2$`p-valuesCorrected`,main = 'p value corrected')
-                hist(sim2$`p-values`,main = 'p value')
+                hist(sim2$`p-valuesCorrected`,main = 'p value corrected',xlab = "")
+                hist(sim2$`p-values`,main = 'p value',xlab = "")
         })
+        # show the table
+        output$simdata <- DT::renderDataTable({
+                sim <- sim()
+                rbind.data.frame(sim$con,sim$data)
+        })
+        # show the download
+        output$simdatad = downloadHandler('simdata.csv', content = function(file) {
+                sim <- sim()
+                data <- rbind.data.frame(sim$con,sim$data)
+                write.csv(data, file)
+        })
+        # show the heatmap
+        output$simdatah <- renderPlot({
+                sim <- sim()
+                simplot(log(sim$data),lv = factor(sim$con))
+        })
+        # show the table
+        output$simbatchall <- DT::renderDataTable({
+                sim <- sim()
+                rbind.data.frame(sim$con,sim$matrix)
+        })
+        # show the download
+        output$simbatchalld = downloadHandler('batchmatrix.csv', content = function(file) {
+                sim <- sim()
+                data <- rbind.data.frame(sim$con,sim$matrix)
+                write.csv(data, file)
+        })
+        # show the heatmap
+        output$simbatchallh <- renderPlot({
+                sim <- sim()
+                simplot(log(sim$matrix),lv = factor(sim$batch))
+        })
+        # show the table
+        output$simbatch <- DT::renderDataTable({
+                sim <- sim()
+                rbind.data.frame(sim$con,sim$batch,sim$bmatrix)
+        })
+        # show the download
+        output$simbatchd = downloadHandler('batch.csv', content = function(file) {
+                sim <- sim()
+                data <- rbind.data.frame(sim$batch,sim$bmatrix)
+                write.csv(data, file)
+        })
+        # show the heatmap
+        output$simbatchh <- renderPlot({
+                sim <- sim()
+                simplot(log(sim$bmatrix),lv = factor(sim$batch))
+        })
+        # show the table
+        output$simcon <- DT::renderDataTable({
+                sim <- sim()
+                rbind.data.frame(sim$con,sim$cmatrix)
+        })
+        # show the download
+        output$simcond = downloadHandler('con.csv', content = function(file) {
+                sim <- sim()
+                data <- rbind.data.frame(sim$con,sim$cmatrix)
+                write.csv(data, file)
+        })
+        # show the heatmap
+        output$simconh <- renderPlot({
+                sim <- sim()
+                simplot(log(sim$cmatrix),lv = factor(sim$con))
+        })
+        
+        
         
         
 })
