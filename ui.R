@@ -233,7 +233,7 @@ shinyUI(
                                 ),
                                 mainPanel(
                                         h3("DART visulization"),
-                                        h4("Prepaer the data"),
+                                        h4("Prepare the data"),
                                         p(
                                                 "If you want to visulise the Direct Analysis in Real Time (DART) data, just upload the data (mzXML file) in the sidebar."
                                         ),
