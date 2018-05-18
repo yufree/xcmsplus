@@ -326,7 +326,7 @@ simroc <- function(sim){
         legend('bottomright',legend = c('raw','sva', 'isva'),pch = 19, col = c('red','blue','green'))
 }
 
-simplot <- function(data,lv,index){
+simplot <- function(data,lv,index = NULL){
         icolors <- (grDevices::colorRampPalette(rev(RColorBrewer::brewer.pal(11,"RdYlBu"))))(100)
         zlim <- range(data)
         if (!is.null(index)) {
