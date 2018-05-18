@@ -212,7 +212,8 @@ shinyUI(
                                                 "Intensity in Log scale",
                                                 min = 1,
                                                 max = 10,
-                                                value = 3
+                                                value = 3,
+                                                step = 0.2
                                         ),
                                         sliderInput(
                                                 "mzppm",
