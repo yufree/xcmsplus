@@ -212,7 +212,23 @@ shinyUI(
                                                 "Intensity in Log scale",
                                                 min = 1,
                                                 max = 10,
-                                                value = 5
+                                                value = 3
+                                        ),
+                                        sliderInput(
+                                                "mzppm",
+                                                "the relative error used for clustering/grouping in ppm",
+                                                min = 0,
+                                                max = 50,
+                                                value = 20,
+                                                step = 1
+                                        ),
+                                        sliderInput(
+                                                "minfrac",
+                                                "minimum fraction of each class in one bin",
+                                                min = 0,
+                                                max = 1,
+                                                value = 1,
+                                                step = 0.01
                                         )
                                 ),
                                 mainPanel(
@@ -231,11 +247,12 @@ shinyUI(
                                         p(
                                                 "After uploading the data, you could change intensity(in Log scale) by the side slides to filter your data. The RSD% filter is not working in this mode."
                                         ),
+                                        dataTableOutput("darttable"),
+                                        p(downloadButton('datadart', 'Download Selected Data')),
                                         plotOutput("dart"),
                                         plotOutput("darttic"),
-                                        plotOutput("dartms"),
-                                        dataTableOutput("darttable"),
-                                        p(downloadButton('datadart', 'Download Selected Data'))
+                                        plotOutput("dartms")
+                                        
                                 )
                         ))),
                 tabPanel(
