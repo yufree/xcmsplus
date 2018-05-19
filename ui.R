@@ -214,22 +214,6 @@ shinyUI(
                                                 max = 10,
                                                 value = 3,
                                                 step = 0.2
-                                        ),
-                                        sliderInput(
-                                                "mzppm",
-                                                "the relative error used for clustering/grouping in ppm",
-                                                min = 0,
-                                                max = 50,
-                                                value = 20,
-                                                step = 1
-                                        ),
-                                        sliderInput(
-                                                "minfrac",
-                                                "minimum fraction of each class in one bin",
-                                                min = 0,
-                                                max = 1,
-                                                value = 1,
-                                                step = 0.01
                                         )
                                 ),
                                 mainPanel(

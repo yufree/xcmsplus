@@ -55,6 +55,6 @@ plotdartms <- function(data){
         pf <- xcms::profMat(data)
         rownames(pf) <- mz <- xcms::profMz(data)
         colnames(pf) <- rt <- data@scantime
-        mzins <- apply(pf,1,sum)
+        mzins <- apply(pf,1,sum)/length(unique(rt))
         plot(mzins~mz, xlab = 'm/z',ylab = 'intensity',type = 'h',main = 'Mass Spectrum')
 }

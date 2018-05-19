@@ -138,14 +138,22 @@ shinyServer(function(input, output) {
         
         dartfilter <- reactive({
                 if (!is.null(input$filedart2)){
-                        xs <- xcmsSet(method="MSW", files=input$filedart2$datapath)
-                        xsg <- group.mzClust(xs,mzppm = input$mzppm, minfrac = input$minfrac)
-                        xsg <- fillPeaks.MSW(xsg)
-                        r <- groupval(xsg,'medret','into')
-                        z <- as.data.frame(groups(xsg))
-                        file <- cbind(mz = z$mzmin,r)
-                        
-                        return(file)
+                        re <- xcms::xcmsRaw(input$filedart2$datapath[1],profstep = 0.01)
+                        MZ <- xcms::profMz(re)
+                        value <- NULL
+                        for(i in input$filedart2$datapath){
+                                data <- xcms::xcmsRaw(i,profstep = 0.01) 
+                                pf <- xcms::profMat(data)
+                                rownames(pf) <- mz <- xcms::profMz(data)
+                                colnames(pf) <- rt <- data@scantime
+                                mzins <- apply(pf,1,sum)/length(unique(rt))
+                                MZ0 <- MZ
+                                MZ <- intersect(MZ,mz)
+                                value <- cbind(value[MZ0 %in% MZ], mzins[mz %in% MZ])
+                        }
+                        value <- value[apply(value, 1, function(x) !all(x==0)),]
+                        colnames(value) <- basename(input$filedart2$datapath)
+                        return(value)
                 }else{
                         return(NULL)
                 }
